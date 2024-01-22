@@ -1,9 +1,9 @@
 #include "pch.h"
 
 #include "MainWindow.h"
-namespace System {
-   MainWindow::MainWindow(HINSTANCE hInstance, int nShowCmd) :
-       hInstance(hInstance), showCmd(nShowCmd) {
+namespace TX::System {
+   MainWindow::MainWindow(HINSTANCE hInstance, int nShowCmd) noexcept :
+       hInstance(hInstance), hWnd(nullptr), showCmd(nShowCmd), resizeHandlers({}) {
    }
 
    LRESULT CALLBACK MainWindow::_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -48,7 +48,7 @@ namespace System {
    int MainWindow::WorkLoop() {
       MSG msg;
       for (;;) {
-         BOOL bRet = GetMessageW(&msg, 0, 0, 0);
+         const auto bRet = GetMessageW(&msg, nullptr, 0, 0);
          if (bRet > 0) {
             TranslateMessage(&msg);
             DispatchMessageW(&msg);
@@ -63,13 +63,18 @@ namespace System {
    }
 
    std::unique_ptr<MainWindow> MainWindow::Create(HINSTANCE hInstance, int nShowCmd) {
-      WNDCLASSW wc = {};
+      WNDCLASSEXW wc = {};
+      wc.cbSize = sizeof(WNDCLASSEX);
+      wc.style = CS_HREDRAW | CS_VREDRAW;
+      wc.cbClsExtra = 0;
+      wc.cbWndExtra = 0;
       wc.lpfnWndProc = MainWindow::_WndProc;
       wc.hInstance = hInstance;
-      wc.hbrBackground = GetSysColorBrush(COLOR_BTNFACE);
-      wc.lpszClassName = MainWindow::wszWndClass;
+      wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+      wc.lpszMenuName = nullptr;
+      wc.lpszClassName = static_cast<LPCWSTR>(MainWindow::wszWndClass);
 
-      if (RegisterClassW(&wc) == 0) {
+      if (RegisterClassExW(&wc) == 0) {
          std::wstring strMessage = GetLastErrorStdWStr();
          MessageBox(nullptr, strMessage.c_str(), wszAppName, MB_ICONERROR);
          return nullptr;
@@ -98,5 +103,9 @@ namespace System {
       }
 
       return pMainWindow;
+   }
+
+   void System::MainWindow::AddSizeChangeHandler(std::function<void(int, int)>&& handler) {
+      resizeHandlers.push_back(std::move(handler));
    }
 }

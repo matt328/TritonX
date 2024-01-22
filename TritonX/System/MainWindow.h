@@ -2,18 +2,20 @@
 
 #include "pch.h"
 
-namespace System {
+namespace TX::System {
    class MainWindow {
     public:
-      HINSTANCE GetHInstance() const {
+      HINSTANCE GetHInstance() const noexcept {
          return hInstance;
       }
 
-      HWND GetHwnd() const {
+      HWND GetHwnd() const noexcept {
          return hWnd;
       }
 
       static std::unique_ptr<MainWindow> Create(HINSTANCE hInstance, int nShowCmd);
+
+      void AddSizeChangeHandler(std::function<void(int, int)>&& handler);
 
       int WorkLoop();
 
@@ -25,7 +27,9 @@ namespace System {
       HWND hWnd;
       int showCmd;
 
-      MainWindow(HINSTANCE hInstance, int nShowCmd);
+      std::vector<std::function<void(int, int)>> resizeHandlers;
+
+      MainWindow(HINSTANCE hInstance, int nShowCmd) noexcept;
       static LRESULT CALLBACK _WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
       LRESULT OnCreate();
       LRESULT OnDestroy();
@@ -33,19 +37,19 @@ namespace System {
    };
 
    static std::wstring GetLastErrorStdWStr() {
-      DWORD error = ::GetLastError();
+      const auto error = ::GetLastError();
       if (error) {
          LPVOID lpMsgBuf = nullptr;
          DWORD bufLen = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
                                           FORMAT_MESSAGE_IGNORE_INSERTS,
-                                      NULL,
+                                      nullptr,
                                       error,
                                       MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                                      (LPWSTR)&lpMsgBuf,
+                                      reinterpret_cast<LPWSTR>(&lpMsgBuf),
                                       0,
-                                      NULL);
+                                      nullptr);
          if (bufLen) {
-            LPWSTR lpMsgStr = (LPWSTR)lpMsgBuf;
+            LPWSTR lpMsgStr = static_cast<LPWSTR>(lpMsgBuf);
             std::wstring result(lpMsgStr, lpMsgStr + bufLen);
             ::LocalFree(lpMsgBuf);
             return result;
