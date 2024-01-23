@@ -7,11 +7,26 @@ namespace TX::Graphics {
 
    using Microsoft::WRL::ComPtr;
 
-   Context::Context(HWND hWnd) {
-      CreateDevice();
+   Context::Context() : fenceValues({0, 0}) {
+   }
+
+   void Context::GetDefaultSize(int& width, int& height) const noexcept {
+      width = 1280;
+      height = 720;
    }
 
    void Context::HandleSizeChange(int width, int height) noexcept {
+   }
+
+   void Context::Initialize(HWND window, int width, int height) {
+      this->window = window;
+      outputWidth = width;
+      outputHeight = height;
+
+      CreateDevice();
+   }
+
+   void Context::Tick() {
    }
 
    void Context::CreateDevice() {
@@ -138,6 +153,9 @@ namespace TX::Graphics {
       }
    }
 
+   void Context::OnActivated() {
+   }
+
    void Context::GetAdapter(IDXGIAdapter1** ppAdapter) {
       *ppAdapter = nullptr;
 
@@ -176,6 +194,25 @@ namespace TX::Graphics {
       }
 
       *ppAdapter = adapter.Detach();
+   }
+
+   void Context::OnDeactivated() {
+   }
+
+   void Context::OnSuspending() {
+   }
+
+   void Context::OnResuming() {
+   }
+
+   void Context::OnWindowSizeChanged(int width, int height) {
+      if (!window) {
+         return;
+      }
+
+      outputWidth = width;
+      outputHeight = height;
+
    }
 
 }

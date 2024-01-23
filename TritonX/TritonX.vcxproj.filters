@@ -32,9 +32,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="System\MainWindow.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
     <ClCompile Include="System\TritonX.cpp">
       <Filter>Main</Filter>
     </ClCompile>
@@ -46,9 +43,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="System\MainWindow.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Main</Filter>
     </ClInclude>
@@ -57,6 +51,9 @@
     </ClInclude>
     <ClInclude Include="Helpers.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

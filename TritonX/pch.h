@@ -31,3 +31,4 @@
 
 #include <comdef.h>
 #include <array>
+#include <sstream>

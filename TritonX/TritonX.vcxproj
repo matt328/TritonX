@@ -103,14 +103,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="System\MainWindow.cpp" />
     <ClCompile Include="System\TritonX.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\Context.h" />
     <ClInclude Include="Helpers.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="System\MainWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.clang-format" />
