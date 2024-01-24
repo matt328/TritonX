@@ -55,5 +55,11 @@
     <ClInclude Include="Logger.h">
       <Filter>System</Filter>
     </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="StepTimer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

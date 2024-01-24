@@ -211,23 +211,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
             if (fullscreen) {
                SetWindowLongPtr(hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW);
                SetWindowLongPtr(hWnd, GWL_EXSTYLE, 0);
-
-               int width = 800;
-               int height = 600;
-               if (context) {
-                  context->GetDefaultSize(width, height);
-               }
+               RECT rect{};
+               context->GetState(rect);
 
                ShowWindow(hWnd, SW_SHOWNORMAL);
 
                SetWindowPos(hWnd,
                             HWND_TOP,
-                            0,
-                            0,
-                            width,
-                            height,
-                            SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
+                            rect.left,
+                            rect.top,
+                            rect.right - rect.left,
+                            rect.bottom - rect.top,
+                            SWP_NOZORDER | SWP_FRAMECHANGED);
             } else {
+               context->CaptureState();
                SetWindowLongPtr(hWnd, GWL_STYLE, WS_POPUP);
                SetWindowLongPtr(hWnd, GWL_EXSTYLE, WS_EX_TOPMOST);
 
